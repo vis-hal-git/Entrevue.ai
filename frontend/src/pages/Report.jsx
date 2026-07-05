@@ -20,7 +20,17 @@ export default function Report() {
   if (loading) return <div style={{ textAlign: 'center', marginTop: '3rem' }}>Loading your results...</div>;
   if (!report || !report.scoreReport) return <div style={{ textAlign: 'center', marginTop: '3rem' }}>Report not found</div>;
 
-  const { scoreReport } = report;
+  const { scoreReport, transcript, metrics } = report;
+
+  let wpm = 0;
+  if (metrics?.totalSpeakingTime > 0) {
+    const studentWords = transcript
+      .filter(t => t.role === 'student')
+      .map(t => t.content.trim().split(/\s+/).length)
+      .reduce((a, b) => a + b, 0);
+    const minutes = metrics.totalSpeakingTime / 60;
+    wpm = Math.round(studentWords / minutes);
+  }
 
   return (
     <div style={{ maxWidth: '900px', margin: '0 auto' }}>
@@ -61,6 +71,26 @@ export default function Report() {
           </ul>
         </div>
       </div>
+
+      {metrics && (
+        <>
+          <h2 style={{ marginBottom: '1.5rem' }}>Speech Metrics</h2>
+          <div className="report-grid" style={{ marginBottom: '3rem' }}>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--accent-primary)', marginBottom: '0.5rem' }}>
+                {wpm}
+              </div>
+              <p style={{ color: 'var(--text-secondary)' }}>Words Per Minute (Pace)</p>
+            </div>
+            <div className="card" style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--accent-primary)', marginBottom: '0.5rem' }}>
+                {metrics.fillerWordCount || 0}
+              </div>
+              <p style={{ color: 'var(--text-secondary)' }}>Filler Words Used</p>
+            </div>
+          </div>
+        </>
+      )}
 
       <h2 style={{ marginBottom: '1.5rem' }}>Detailed Breakdown</h2>
       <div className="criteria-list">

@@ -214,6 +214,7 @@ Output nothing but the JSON.`;
       role: state.role,
       date: state.date,
       transcript: state.transcript,
+      metrics: state.metrics || {},
       scoreReport
     };
 
