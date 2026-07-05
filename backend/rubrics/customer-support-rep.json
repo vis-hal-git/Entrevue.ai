@@ -2,10 +2,11 @@
   "id": "customer-support-rep",
   "role": "Customer Support Representative",
   "criteria": [
-    { "name": "Empathy and Patience", "weight": 30 },
+    { "name": "Empathy and Patience", "weight": 25 },
     { "name": "Problem Resolution", "weight": 25 },
     { "name": "Communication Clarity", "weight": 20 },
-    { "name": "Product Knowledge Aptitude", "weight": 15 },
-    { "name": "Verbal Communication (Pacing & Fillers)", "weight": 10 }
+    { "name": "Product Knowledge Aptitude", "weight": 10 },
+    { "name": "Verbal Communication (Pacing & Fillers)", "weight": 10 },
+    { "name": "Body Language / Presence (Webcam Analysis)", "weight": 10 }
   ]
 }

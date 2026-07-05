@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function Report() {
   const { id } = useParams();
+  const location = useLocation();
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const videoBlobUrl = location.state?.videoBlobUrl;
 
   useEffect(() => {
     fetch(`http://localhost:3001/api/interviews/${id}`)
@@ -30,6 +33,19 @@ export default function Report() {
       .reduce((a, b) => a + b, 0);
     const minutes = metrics.totalSpeakingTime / 60;
     wpm = Math.round(studentWords / minutes);
+  }
+
+  const bodyMetricsTimeline = metrics?.bodyMetricsTimeline;
+  let bodyLanguageScore = 0;
+  if (bodyMetricsTimeline && bodyMetricsTimeline.length > 0) {
+    let sumFace = 0, sumEye = 0, sumStill = 0;
+    bodyMetricsTimeline.forEach(m => {
+      sumFace += m.faceVisible;
+      sumEye += m.eyeContact;
+      sumStill += m.stillness;
+    });
+    const len = bodyMetricsTimeline.length;
+    bodyLanguageScore = Math.round(((sumEye / len) * 5 + (sumFace / len) * 3 + (sumStill / len) * 2) * 10) / 10;
   }
 
   return (
@@ -71,6 +87,39 @@ export default function Report() {
           </ul>
         </div>
       </div>
+
+      {bodyMetricsTimeline && bodyMetricsTimeline.length > 0 && (
+        <>
+          <h2 style={{ marginBottom: '1.5rem' }}>Body Language / Presence (Webcam Analysis)</h2>
+          <div className="card" style={{ marginBottom: '3rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <div style={{ fontSize: '1.2rem', fontWeight: 600 }}>Overall Presence Score</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--accent-primary)' }}>{bodyLanguageScore}/10</div>
+            </div>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+              *This score is approximate and based on local webcam heuristics (50% Eye Contact, 30% Face Visibility, 20% Stillness).
+            </p>
+            
+            <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>Eye Contact Timeline</h3>
+            <div style={{ display: 'flex', gap: '4px', height: '60px', alignItems: 'flex-end', marginBottom: '1rem' }}>
+              {bodyMetricsTimeline.map((m, i) => (
+                <div key={i} style={{ flex: 1, backgroundColor: 'var(--bg-tertiary)', height: '100%', position: 'relative', borderRadius: '4px', overflow: 'hidden' }} title={`Question ${i + 1}: ${Math.round(m.eyeContact * 100)}% Eye Contact`}>
+                   <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: `${m.eyeContact * 100}%`, backgroundColor: 'var(--accent-primary)', transition: 'height 0.3s' }}></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+
+      {videoBlobUrl && (
+        <>
+           <h2 style={{ marginBottom: '1.5rem' }}>Session Recording</h2>
+           <div className="card" style={{ marginBottom: '3rem', textAlign: 'center' }}>
+             <video src={videoBlobUrl} controls style={{ width: '100%', maxWidth: '800px', borderRadius: '8px' }}></video>
+           </div>
+        </>
+      )}
 
       {metrics && (
         <>
