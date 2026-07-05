@@ -1,0 +1,10 @@
+{
+  "id": "marketing-associate",
+  "role": "Marketing Associate",
+  "criteria": [
+    { "name": "Strategic Thinking", "weight": 30 },
+    { "name": "Creativity", "weight": 25 },
+    { "name": "Data Analysis", "weight": 20 },
+    { "name": "Communication Skills", "weight": 25 }
+  ]
+}

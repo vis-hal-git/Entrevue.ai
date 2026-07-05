@@ -1,0 +1,10 @@
+{
+  "id": "customer-support-rep",
+  "role": "Customer Support Representative",
+  "criteria": [
+    { "name": "Empathy and Patience", "weight": 35 },
+    { "name": "Problem Resolution", "weight": 30 },
+    { "name": "Communication Clarity", "weight": 20 },
+    { "name": "Product Knowledge Aptitude", "weight": 15 }
+  ]
+}

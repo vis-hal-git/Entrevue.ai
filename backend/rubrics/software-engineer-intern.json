@@ -1,0 +1,10 @@
+{
+  "id": "software-engineer-intern",
+  "role": "Software Engineer Intern",
+  "criteria": [
+    { "name": "Technical Knowledge", "weight": 40 },
+    { "name": "Problem Solving", "weight": 25 },
+    { "name": "Communication Clarity", "weight": 20 },
+    { "name": "Confidence", "weight": 15 }
+  ]
+}
